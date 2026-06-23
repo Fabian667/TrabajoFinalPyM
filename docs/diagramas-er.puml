@@ -1,0 +1,170 @@
+@startuml
+
+!pragma layout smetana
+
+entity "category" as category {
+  *id : Long <<PK>>
+  --
+  *name : String
+  description : String
+}
+
+entity "product" as product {
+  *id : Long <<PK>>
+  --
+  *name : String
+  description : String
+  *price : BigDecimal
+  *stock : Integer
+  sku : String
+  imageUrl : String
+  *category_id : Long <<FK>>
+}
+
+entity "raw_material" as raw_material {
+  *id : Long <<PK>>
+  --
+  *name : String
+  description : String
+  *unit : String
+  *stock : BigDecimal
+  *unitCost : BigDecimal
+  *supplier_id : Long <<FK>>
+}
+
+entity "supplier" as supplier {
+  *id : Long <<PK>>
+  --
+  *name : String
+  contact : String
+  email : String
+  phone : String
+  address : String
+}
+
+entity "production_order" as production_order {
+  *id : Long <<PK>>
+  --
+  *number : String
+  *creationDate : LocalDate
+  startDate : LocalDate
+  endDate : LocalDate
+  *status : ProductionOrderStatus
+  *product_id : Long <<FK>>
+  *quantity : Integer
+  observations : String
+}
+
+entity "production_stage" as production_stage {
+  *id : Long <<PK>>
+  --
+  *name : String
+  *order : Integer
+  description : String
+}
+
+entity "stage_log" as stage_log {
+  *id : Long <<PK>>
+  --
+  *production_order_id : Long <<FK>>
+  *production_stage_id : Long <<FK>>
+  *startDate : LocalDateTime
+  endDate : LocalDateTime
+  *user_id : Long <<FK>>
+  observations : String
+}
+
+entity "material_consumption" as material_consumption {
+  *id : Long <<PK>>
+  --
+  *production_order_id : Long <<FK>>
+  *raw_material_id : Long <<FK>>
+  *quantity : BigDecimal
+}
+
+entity "bill_of_materials" as bill_of_materials {
+  *id : Long <<PK>>
+  --
+  *product_id : Long <<FK>>
+  *raw_material_id : Long <<FK>>
+  *requiredQuantity : BigDecimal
+}
+
+entity "customer" as customer {
+  *id : Long <<PK>>
+  --
+  *name : String
+  email : String
+  phone : String
+  address : String
+}
+
+entity "orders" as orders {
+  *id : Long <<PK>>
+  --
+  *number : String
+  *date : LocalDate
+  *total : BigDecimal
+  *status : OrderStatus
+  *customer_id : Long <<FK>>
+  *isEcommerce : Boolean
+}
+
+entity "order_item" as order_item {
+  *id : Long <<PK>>
+  --
+  *order_id : Long <<FK>>
+  *product_id : Long <<FK>>
+  *quantity : Integer
+  *unitPrice : BigDecimal
+}
+
+entity "users" as users {
+  *id : Long <<PK>>
+  --
+  *name : String
+  *email : String
+  *passwordHash : String
+  *role : UserRole
+}
+
+entity "purchase_order" as purchase_order {
+  *id : Long <<PK>>
+  --
+  *number : String
+  *date : LocalDate
+  *total : BigDecimal
+  *status : PurchaseOrderStatus
+  *supplier_id : Long <<FK>>
+}
+
+entity "purchase_item" as purchase_item {
+  *id : Long <<PK>>
+  --
+  *purchase_order_id : Long <<FK>>
+  *raw_material_id : Long <<FK>>
+  *quantity : BigDecimal
+  *unitPrice : BigDecimal
+}
+
+' ------------------------------
+' Relaciones
+' ------------------------------
+category ||..o{ product
+product ||..o{ bill_of_materials
+raw_material ||..o{ bill_of_materials
+supplier ||..o{ raw_material
+product ||..o{ production_order
+production_order ||..o{ stage_log
+production_stage ||..o{ stage_log
+users ||..o{ stage_log
+production_order ||..o{ material_consumption
+raw_material ||..o{ material_consumption
+customer ||..o{ orders
+orders ||..o{ order_item
+product ||..o{ order_item
+supplier ||..o{ purchase_order
+purchase_order ||..o{ purchase_item
+raw_material ||..o{ purchase_item
+
+@enduml

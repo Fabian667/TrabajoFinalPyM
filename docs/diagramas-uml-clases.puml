@@ -1,0 +1,196 @@
+@startuml
+
+' ------------------------------
+' Enumeraciones
+' ------------------------------
+enum OrderStatus {
+    PENDIENTE
+    PAGADO
+    ENVIADO
+    ENTREGADO
+    CANCELADO
+}
+
+enum ProductionOrderStatus {
+    PENDIENTE
+    EN_PRODUCCION
+    TERMINADA
+    CANCELADA
+}
+
+enum PurchaseOrderStatus {
+    PENDIENTE
+    RECIBIDA
+    CANCELADA
+}
+
+enum UserRole {
+    ADMIN
+    PRODUCCION
+    VENTAS
+    ALMACEN
+}
+
+' ------------------------------
+' Clases
+' ------------------------------
+class Category {
+    - Long id
+    - String name
+    - String description
+    - List<Product> products
+}
+
+class Product {
+    - Long id
+    - String name
+    - String description
+    - BigDecimal price
+    - Integer stock
+    - String sku
+    - String imageUrl
+    - Category category
+    - List<BillOfMaterials> billOfMaterials
+}
+
+class RawMaterial {
+    - Long id
+    - String name
+    - String description
+    - String unit
+    - BigDecimal stock
+    - BigDecimal unitCost
+    - Supplier supplier
+}
+
+class Supplier {
+    - Long id
+    - String name
+    - String contact
+    - String email
+    - String phone
+    - String address
+    - List<RawMaterial> rawMaterials
+    - List<PurchaseOrder> purchaseOrders
+}
+
+class ProductionOrder {
+    - Long id
+    - String number
+    - LocalDate creationDate
+    - LocalDate startDate
+    - LocalDate endDate
+    - ProductionOrderStatus status
+    - Product product
+    - Integer quantity
+    - String observations
+    - List<StageLog> stageLogs
+    - List<MaterialConsumption> materialConsumptions
+}
+
+class ProductionStage {
+    - Long id
+    - String name
+    - Integer order
+    - String description
+}
+
+class StageLog {
+    - Long id
+    - ProductionOrder productionOrder
+    - ProductionStage stage
+    - LocalDateTime startDate
+    - LocalDateTime endDate
+    - User user
+    - String observations
+}
+
+class MaterialConsumption {
+    - Long id
+    - ProductionOrder productionOrder
+    - RawMaterial rawMaterial
+    - BigDecimal quantity
+}
+
+class BillOfMaterials {
+    - Long id
+    - Product product
+    - RawMaterial rawMaterial
+    - BigDecimal requiredQuantity
+}
+
+class Customer {
+    - Long id
+    - String name
+    - String email
+    - String phone
+    - String address
+    - List<Order> orders
+}
+
+class Order {
+    - Long id
+    - String number
+    - LocalDate date
+    - BigDecimal total
+    - OrderStatus status
+    - Customer customer
+    - Boolean isEcommerce
+    - List<OrderItem> orderItems
+}
+
+class OrderItem {
+    - Long id
+    - Order order
+    - Product product
+    - Integer quantity
+    - BigDecimal unitPrice
+}
+
+class User {
+    - Long id
+    - String name
+    - String email
+    - String passwordHash
+    - UserRole role
+}
+
+class PurchaseOrder {
+    - Long id
+    - String number
+    - LocalDate date
+    - BigDecimal total
+    - PurchaseOrderStatus status
+    - Supplier supplier
+    - List<PurchaseItem> purchaseItems
+}
+
+class PurchaseItem {
+    - Long id
+    - PurchaseOrder purchaseOrder
+    - RawMaterial rawMaterial
+    - BigDecimal quantity
+    - BigDecimal unitPrice
+}
+
+' ------------------------------
+' Relaciones
+' ------------------------------
+Category "1" -- "N" Product
+Product "1" -- "N" BillOfMaterials
+BillOfMaterials "N" -- "1" RawMaterial
+Supplier "1" -- "N" RawMaterial
+Product "1" -- "N" ProductionOrder
+ProductionOrder "1" -- "N" StageLog
+StageLog "N" -- "1" ProductionStage
+StageLog "N" -- "1" User
+ProductionOrder "1" -- "N" MaterialConsumption
+MaterialConsumption "N" -- "1" RawMaterial
+Customer "1" -- "N" Order
+Order "1" -- "N" OrderItem
+OrderItem "N" -- "1" Product
+Supplier "1" -- "N" PurchaseOrder
+PurchaseOrder "1" -- "N" PurchaseItem
+PurchaseItem "N" -- "1" RawMaterial
+
+@enduml

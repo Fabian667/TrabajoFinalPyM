@@ -1,0 +1,171 @@
+// =========================
+// ERP - FABRICACIÓN DE MUEBLES
+// UML CLASS DIAGRAM (STARUML)
+// =========================
+
+class Category {
+    +id: Long
+    +name: String
+    +description: String
+}
+
+class Supplier {
+    +id: Long
+    +name: String
+    +contact: String
+    +email: String
+    +phone: String
+    +address: String
+}
+
+class RawMaterial {
+    +id: Long
+    +name: String
+    +description: String
+    +unit: String
+    +stock: Decimal
+    +unit_cost: Decimal
+}
+
+class Product {
+    +id: Long
+    +name: String
+    +description: String
+    +price: Decimal
+    +stock: Integer
+    +sku: String
+    +image_url: String
+}
+
+class BillOfMaterials {
+    +id: Long
+    +required_quantity: Decimal
+}
+
+class ProductionStage {
+    +id: Long
+    +name: String
+    +order: Integer
+    +description: String
+}
+
+class Users {
+    +id: Long
+    +name: String
+    +email: String
+    +password_hash: String
+    +role: String
+}
+
+class ProductionOrder {
+    +id: Long
+    +number: String
+    +creation_date: Date
+    +start_date: Date
+    +end_date: Date
+    +status: String
+    +quantity: Integer
+    +observations: String
+}
+
+class StageLog {
+    +id: Long
+    +start_date: DateTime
+    +end_date: DateTime
+    +observations: String
+}
+
+class MaterialConsumption {
+    +id: Long
+    +quantity: Decimal
+}
+
+class Customer {
+    +id: Long
+    +name: String
+    +email: String
+    +phone: String
+    +address: String
+}
+
+class Orders {
+    +id: Long
+    +number: String
+    +date: Date
+    +total: Decimal
+    +status: String
+    +is_ecommerce: Boolean
+}
+
+class OrderItem {
+    +id: Long
+    +quantity: Integer
+    +unit_price: Decimal
+}
+
+class PurchaseOrder {
+    +id: Long
+    +number: String
+    +date: Date
+    +total: Decimal
+    +status: String
+}
+
+class PurchaseItem {
+    +id: Long
+    +quantity: Decimal
+    +unit_price: Decimal
+}
+
+
+// =========================
+// RELACIONES
+// =========================
+
+// Category 1..* Product
+Category "1" -- "0..*" Product : category_id
+
+// Supplier 1..* RawMaterial
+Supplier "1" -- "0..*" RawMaterial : supplier_id
+
+// Product 1..* BillOfMaterials
+Product "1" -- "0..*" BillOfMaterials : product_id
+
+// RawMaterial 1..* BillOfMaterials
+RawMaterial "1" -- "0..*" BillOfMaterials : raw_material_id
+
+// Product 1..* ProductionOrder
+Product "1" -- "0..*" ProductionOrder : product_id
+
+// ProductionStage 1..* StageLog
+ProductionStage "1" -- "0..*" StageLog : production_stage_id
+
+// ProductionOrder 1..* StageLog
+ProductionOrder "1" -- "0..*" StageLog : production_order_id
+
+// Users 1..* StageLog
+Users "1" -- "0..*" StageLog : user_id
+
+// ProductionOrder 1..* MaterialConsumption
+ProductionOrder "1" -- "0..*" MaterialConsumption : production_order_id
+
+// RawMaterial 1..* MaterialConsumption
+RawMaterial "1" -- "0..*" MaterialConsumption : raw_material_id
+
+// Customer 1..* Orders
+Customer "1" -- "0..*" Orders : customer_id
+
+// Orders 1..* OrderItem
+Orders "1" -- "0..*" OrderItem : order_id
+
+// Product 1..* OrderItem
+Product "1" -- "0..*" OrderItem : product_id
+
+// Supplier 1..* PurchaseOrder
+Supplier "1" -- "0..*" PurchaseOrder : supplier_id
+
+// PurchaseOrder 1..* PurchaseItem
+PurchaseOrder "1" -- "0..*" PurchaseItem : purchase_order_id
+
+// RawMaterial 1..* PurchaseItem
+RawMaterial "1" -- "0..*" PurchaseItem : raw_material_id
