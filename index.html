@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Muebles - Ecommerce y Gestión</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">🪵 ERP Muebles</h1>
+                <nav class="nav">
+                    <button class="nav-btn active" data-section="ecommerce">Tienda Online</button>
+                    <button class="nav-btn" data-section="dashboard">Dashboard</button>
+                    <button class="nav-btn" data-section="products">Productos</button>
+                    <button class="nav-btn" data-section="orders">Pedidos</button>
+                    <button class="nav-btn" data-section="production">Producción</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Ecommerce Section -->
+        <section id="ecommerce" class="section active">
+            <div class="container">
+                <div class="hero">
+                    <h2>Muebles de Madera Artesanales</h2>
+                    <p>Calidad, diseño y confort para tu hogar</p>
+                </div>
+                <div class="product-grid" id="productGrid"></div>
+                <div class="cart-summary" id="cartSummary">
+                    <h3>Carrito (<span id="cartCount">0</span>)</h3>
+                    <ul id="cartItems"></ul>
+                    <p class="total">Total: $<span id="cartTotal">0.00</span></p>
+                    <button class="btn-primary" onclick="checkout()">Finalizar Compra</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section">
+            <div class="container">
+                <h2>Dashboard</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Ventas del Día</h3>
+                        <p class="stat-number">$12,450</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pedidos Pendientes</h3>
+                        <p class="stat-number">8</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Producción en Curso</h3>
+                        <p class="stat-number">5</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Stock Bajo</h3>
+                        <p class="stat-number">3</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section id="products" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Gestión de Productos</h2>
+                    <button class="btn-primary" onclick="openModal('productModal')">Nuevo Producto</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="orders" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Gestión de Pedidos</h2>
+                    <button class="btn-primary" onclick="openModal('newOrderModal')">Nuevo Pedido</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Origen</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Production Section -->
+        <section id="production" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Ordenes de Producción</h2>
+                    <button class="btn-primary" onclick="openModal('productionModal')">Nueva Orden</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Fecha Creación</th>
+                            <th>Estado</th>
+                            <th>Etapa Actual</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productionTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Nuevo Producto</h2>
+                <button class="close-btn" onclick="closeModal('productModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="productName" class="form-input" placeholder="Nombre del producto" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoría</label>
+                        <select id="productCategory" class="form-input" required>
+                            <option value="">Seleccionar</option>
+                            <option value="Comedor">Comedor</option>
+                            <option value="Oficina">Oficina</option>
+                            <option value="Dormitorio">Dormitorio</option>
+                            <option value="Sala">Sala</option>
+                            <option value="Almacenamiento">Almacenamiento</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio</label>
+                        <input type="number" id="productPrice" class="form-input" placeholder="0.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" id="productStock" class="form-input" placeholder="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción</label>
+                        <textarea id="productDescription" class="form-input" rows="3" placeholder="Descripción del producto"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('productModal')">Cancelar</button>
+                <button class="btn-primary" onclick="saveProduct()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="productionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nueva Orden de Producción</h2>
+                <button class="close-btn" onclick="closeModal('productionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="productionForm">
+                    <div class="form-group">
+                        <label>Producto</label>
+                        <select class="form-input" id="productSelect" required>
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantidad</label>
+                        <input type="number" class="form-input" placeholder="0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('productionModal')">Cancelar</button>
+                <button class="btn-primary" onclick="saveProduction()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Pedido -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="orderModalTitle">Detalle del Pedido</h2>
+                <button class="close-btn" onclick="closeModal('orderModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="orderModalBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('orderModal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Producción -->
+    <div id="productionDetailModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productionDetailTitle">Detalle de Producción</h2>
+                <button class="close-btn" onclick="closeModal('productionDetailModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="productionDetailBody">
+                <!-- Contenido dinámico -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('productionDetailModal')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Pedido -->
+    <div id="newOrderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nuevo Pedido</h2>
+                <button class="close-btn" onclick="closeModal('newOrderModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newOrderForm">
+                    <div class="form-group">
+                        <label>Cliente</label>
+                        <input type="text" id="orderCustomer" class="form-input" placeholder="Nombre del cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Origen</label>
+                        <select id="orderOrigin" class="form-input" required>
+                            <option value="false">Presencial</option>
+                            <option value="true">Online</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Productos</label>
+                        <div id="orderItemsContainer">
+                            <div class="order-item-row" style="display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-end;">
+                                <div style="flex: 2;">
+                                    <select class="form-input order-product-select" style="width: 100%;" required>
+                                        <option value="">Seleccionar producto</option>
+                                    </select>
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" class="form-input order-item-qty" placeholder="Cantidad" min="1" value="1" required>
+                                </div>
+                                <button type="button" class="btn-secondary" onclick="removeOrderItem(this)" style="padding: 10px 16px;">Eliminar</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-primary" onclick="addOrderItem()" style="margin-top: 8px; width: 100%;">Agregar Producto</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('newOrderModal')">Cancelar</button>
+                <button class="btn-primary" onclick="saveNewOrder()">Guardar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
